@@ -6,13 +6,13 @@ namespace case_study_backend.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class UserController : Controller
+public class StoryController : Controller
 {
     private readonly IUnitOfWork _unitOfWork;
     //TODO: Can be added later, maybe! 
     //private readonly IAuthService authService;
 
-    public UserController(IUnitOfWork unitOfWork)
+    public StoryController(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
         //this.authService = _authService;

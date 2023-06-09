@@ -18,9 +18,29 @@ public class UnitOfWork : IUnitOfWork
     }
 
     private IUserRepository? _users;
+    private IRelationsRepository? _relations;
+    private IStoriesRepository? _stories;
+    private IStoryDetailRepository? _storyDetail;
+    private IStorySeenRepository? _storySeen;
 
     public IUserRepository Users =>
         _users ??= new UserRepository(_configuration);
+
+
+    public IRelationsRepository Relations =>
+        _relations ??= new RelationsRepository(_configuration);
+
+
+    public IStoriesRepository Stories =>
+        _stories ??= new StoriesRepository(_configuration);
+
+
+    public IStoryDetailRepository StoryDetails =>
+        _storyDetail ??= new StoryDetailRepository(_configuration);
+
+
+    public IStorySeenRepository StorySeens =>
+        _storySeen ??= new StorySeenRepository(_configuration);
 
 
     private void Dispose(bool disposing)
