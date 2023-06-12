@@ -8,7 +8,7 @@ namespace case_study_backend.Repository;
 
 public abstract class GenericRepository<T> : IGenericRepository<T> where T : class
 {
-    private IConfiguration? Configuration;
+    protected IConfiguration? Configuration;
 
     protected abstract string DeleteString { get; }
 

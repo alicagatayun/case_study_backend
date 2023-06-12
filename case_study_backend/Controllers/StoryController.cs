@@ -1,4 +1,5 @@
 using case_study_backend.Model;
+using case_study_backend.Model.dto;
 using case_study_backend.Result;
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,5 +34,38 @@ public class StoryController : Controller
             result.Data = null;
             return result;
         }
+    }
+
+    [HttpGet("get-user-connections-having-story")]
+    public async Task<EndpointResult<List<UserDto>>> GetUserConnectionsHavingStory()
+    {
+        var result = new EndpointResult<List<UserDto>>();
+        try
+        {
+            return await _unitOfWork.Stories.GetUserStories(Guid.Parse("563a77e9-3a2e-4a45-bdcf-01d214c2f86b"));
+        }
+        catch (Exception ex)
+        {
+            result.HasError = true;
+            result.ErrorMessage = ex.Message;
+            result.Data = null;
+            return result;
+        }
+    }
+
+    //CURRENT USER ID : Guid.Parse("e7c7a707-8842-48ff-be7d-5b35a284ea93")
+
+    [HttpGet("get-mine-story")]
+    public EndpointResult<Stories> GetMineStory()
+    {
+        return new EndpointResult<Stories>()
+        {
+            HasError = false,
+            Data = new Stories()
+            {
+                Id = Guid.Parse("9c1b5327-5c29-4415-bd0d-08bec719b8bb"),
+                UserId = Guid.Parse("e7c7a707-8842-48ff-be7d-5b35a284ea93")
+            }
+        };
     }
 }
