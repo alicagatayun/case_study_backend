@@ -37,12 +37,30 @@ public class StoryController : Controller
     }
 
     [HttpGet("get-user-connections-having-story")]
-    public async Task<EndpointResult<List<UserDto>>> GetUserConnectionsHavingStory()
+    public async Task<EndpointResult<List<UserDto>>> GetUserConnectionsHavingStory(String userId)
     {
         var result = new EndpointResult<List<UserDto>>();
         try
         {
-            return await _unitOfWork.Stories.GetUserStories(Guid.Parse("563a77e9-3a2e-4a45-bdcf-01d214c2f86b"));
+            return await _unitOfWork.Stories.GetUserStories(Guid.Parse(userId));
+        }
+        catch (Exception ex)
+        {
+            result.HasError = true;
+            result.ErrorMessage = ex.Message;
+            result.Data = null;
+            return result;
+        }
+    }
+
+   
+    [HttpGet("get-story-detail")]
+    public async Task<EndpointResult<StoryDetailDto>> GetStoryDetail(String storyId)
+    {
+        var result = new EndpointResult<StoryDetailDto>();
+        try
+        {
+            return await _unitOfWork.Stories.GetStoryDetail(Guid.Parse(storyId));
         }
         catch (Exception ex)
         {

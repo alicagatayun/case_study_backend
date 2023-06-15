@@ -130,4 +130,58 @@ WHERE Id = @Id";
             };
         }
     }
+
+    public async Task<EndpointResult<StoryDetailDto>> GetStoryDetail(Guid storyId)
+    {
+        using var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+
+        try
+        {
+            if (Configuration == null)
+                return new EndpointResult<StoryDetailDto>
+                {
+                    Data = null,
+                    ErrorMessage = "No configuration found",
+                    HasError = true
+                };
+            await using var sqlConnection =
+                new SqlConnection(Configuration.GetConnectionString("DefaultConnection"));
+
+
+            var query = $"Select * from StoryDetail where StoryId = '{storyId}'";
+            var stories = await sqlConnection.QueryAsync<StoryDetail>(query);
+            var storyDetail = new StoryDetailDto
+            {
+                StoryDetails = stories.ToList(),
+                startFrom = 0
+            };
+
+            query = $"Select * from StoryDetail AS SD, StorySeen AS SS " +
+                    $"where SD.Id = SS.StoryDetailId AND SD.StoryId = '{storyId}'";
+            var result = await sqlConnection.QueryAsync<StoryDetail>(query);
+            if (result != null)
+            {
+                var resultList = result.ToList();
+                if (resultList.Count != storyDetail.StoryDetails.Count)
+                    storyDetail.startFrom = resultList.Count;
+            }
+
+
+            scope.Complete();
+            return new EndpointResult<StoryDetailDto>
+            {
+                Data = storyDetail,
+                HasError = false
+            };
+        }
+        catch (Exception e)
+        {
+            return new EndpointResult<StoryDetailDto>
+            {
+                Data = null,
+                ErrorMessage = e.ToString(),
+                HasError = true
+            };
+        }
+    }
 }
